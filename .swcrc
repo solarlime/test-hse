@@ -1,0 +1,19 @@
+{
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true
+    },
+    "transform": {
+      "react": {
+        "runtime": "automatic"
+      }
+    }
+  },
+  "env": {
+    "targets": "defaults, edge >= 109, iOS >= 15.4, safari >= 15.4, not op_mini all",
+    "coreJs": "3.44",
+    "mode": "usage",
+    "dynamicImport": true
+  }
+}
