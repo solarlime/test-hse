@@ -9028,9 +9028,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"test-only@workspace:.":
+"test-hse@workspace:.":
   version: 0.0.0-use.local
-  resolution: "test-only@workspace:."
+  resolution: "test-hse@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.24.0"
     "@react-hook/resize-observer": "npm:^2.0.2"

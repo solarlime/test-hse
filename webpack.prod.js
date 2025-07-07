@@ -6,6 +6,9 @@ import common from './webpack.common.js';
 const mode = 'production';
 
 export default merge(common(mode), {
+  output: {
+    publicPath: '/test-hse/',
+  },
   optimization: {
     minimizer: [
       new TerserPlugin({

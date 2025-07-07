@@ -1,5 +1,5 @@
 {
-  "name": "test-only",
+  "name": "test-hse",
   "version": "1.0.0",
   "description": "The test task for HSE Art and Design School",
   "main": "src/index.tsx",
@@ -8,9 +8,11 @@
     "build": "webpack --config webpack.prod.js",
     "prettier:check": "prettier . --check",
     "prettier:fix": "prettier . --write",
+    "lint:check": "eslint .",
     "lint:code": "eslint . --fix",
     "lint:styles": "stylelint ./src/**/*.(html|css|ts|tsx) --fix",
-    "lint": "yarn lint:code && yarn lint:styles"
+    "lint": "yarn lint:code && yarn lint:styles",
+    "check": "yarn lint:check && yarn prettier:check"
   },
   "type": "module",
   "repository": {
@@ -22,7 +24,7 @@
   "bugs": {
     "url": "https://github.com/solarlime/test-hse/issues"
   },
-  "homepage": "https://github.com/solarlime/test-hse#readme",
+  "homepage": "https://solarlime.github.io/test-hse/",
   "devDependencies": {
     "@eslint/js": "^9.24.0",
     "@svgr/webpack": "^8.1.0",

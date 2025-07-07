@@ -6,7 +6,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ main ]
+    branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -31,13 +31,13 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --immutable
 
       - name: Linting
-        run: npm run lint
+        run: yarn run check
 
       - name: Building
-        run: npm run build
+        run: yarn run build
 
       - name: Deploy to GitHub Pages
         run: |
