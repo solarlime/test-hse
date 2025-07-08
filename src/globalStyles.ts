@@ -3,15 +3,20 @@ import { createGlobalStyle } from 'styled-components';
 export default createGlobalStyle`
   :root {
     --black: #151514;
+    --black5: #F2F2F2;
     --black21: #CDCDCD;
+    --black27: #BFBFBF;
     --black31: #B6B6B5;
     --black47: #909090;
     --white-pure: #FFF;
     --white: #FEFEFE;
     --white47: #838382;
+    --red: #C64839;
+    --max-width: 1152px;
   }
 
   body {
+    position: relative;
     padding: 0;
     margin: 0;
     background: var(--white-pure);
@@ -46,8 +51,19 @@ export default createGlobalStyle`
 
   button:focus-visible,
   label:has(input:focus-visible) {
-      outline: var(--black) solid 2px;
+      outline: var(--red) solid 2px;
       outline-offset: 1px;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    appearance: none;
+  }
+
+  input[type='number'],
+  input[type="number"]:hover,
+  input[type="number"]:focus {
+    appearance: textfield;
   }
   
   p {
@@ -60,12 +76,11 @@ export default createGlobalStyle`
   }
   
   #root {
-    position: relative;
     display: flex;
     flex-direction: column;
     gap: 16px;
     min-height: 100dvh;
-    max-width: 1152px;
+    max-width: var(--max-width);
     margin: 0 auto;
   }
 `;
