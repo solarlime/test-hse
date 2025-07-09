@@ -77,8 +77,10 @@ const Dropdown = observer(
       <StyledDropdownWrapper>
         <StyledDropdown
           id={id}
-          value={formStore.getValue(id) ?? defaultValue}
-          $value={formStore.getValue(id) ?? defaultValue}
+          value={(formStore.getValue(id) as string | undefined) ?? defaultValue}
+          $value={
+            (formStore.getValue(id) as string | undefined) ?? defaultValue
+          }
           $defaultValue={defaultValue}
           onChange={(e) => formStore.setValue(id, e.target.value)}
           {...props}

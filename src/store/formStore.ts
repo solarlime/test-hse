@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx';
+import { IImage } from '../interfaces/form';
 
 class FormStore {
   constructor() {
@@ -15,7 +16,7 @@ class FormStore {
     this._isFormOpened = value;
   }
 
-  private _values: { [key: string]: string } = {};
+  private _values: { [key: string]: string | IImage[] } = {};
 
   getValue(id: string) {
     if (id in this._values) {
@@ -25,8 +26,29 @@ class FormStore {
   }
 
   setValue(id: string, value: string) {
-    console.log(id, value);
     this._values[id] = value;
+  }
+
+  setFileValue(id: string, files: IImage[]) {
+    if (id in this._values) {
+      if (Array.isArray(this._values[id])) {
+        this._values[id].push(...files);
+      } else {
+        console.error(
+          'Вы пытаетесь сохранить файлы в поле, которое содержит иные данные!',
+        );
+      }
+    } else {
+      this._values[id] = files;
+    }
+  }
+
+  removeFile(id: string, fileId: string) {
+    if (id in this._values && Array.isArray(this._values[id])) {
+      this._values[id] = this._values[id].filter(
+        (image) => image.id !== fileId,
+      );
+    }
   }
 }
 

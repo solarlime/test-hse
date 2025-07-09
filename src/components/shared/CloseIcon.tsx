@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import Close from '../../assets/close.svg?react';
-import BigClose from '../../assets/close_big.svg?react';
+import BigClose from '../../assets/close-big.svg?react';
 import { useStore } from '../../store/StoreProvider';
 import { AppContext } from '../../AppContext';
 
@@ -15,7 +15,7 @@ const StyledCloseIcon = styled.button`
   background-color: transparent;
 
   @media screen and (min-width: 501px) {
-    position: absolute;
+    position: fixed;
     right: 64px;
     top: 64px;
   }

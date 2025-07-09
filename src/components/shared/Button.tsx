@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import type { HTMLProps, ReactNode } from 'react';
+import { HTMLProps, ReactNode } from 'react';
 
-const StyledButton = styled.button<{ $type: 'primary' | 'secondary' }>`
+export const buttonStyle = css`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,6 +23,10 @@ const StyledButton = styled.button<{ $type: 'primary' | 'secondary' }>`
     font-size: 15px;
     line-height: 20px;
   }
+`;
+
+const StyledButton = styled.button<{ $type: 'primary' | 'secondary' }>`
+  ${buttonStyle}
 
   ${({ $type }) => {
     switch ($type) {

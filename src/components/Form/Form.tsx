@@ -13,8 +13,14 @@ const FormContainer = styled.div<{ $isCompact?: boolean }>`
       ? css`
           position: absolute;
           inset: 0;
-          padding: 88px 0 0;
+          padding: 88px 0 80px;
           background: var(--white-pure);
+          overflow-y: scroll;
+          scrollbar-width: none;
+
+          &::-webkit-scrollbar {
+            width: 0;
+          }
         `
       : css`
           display: flex;
@@ -100,6 +106,20 @@ const fields: Array<IInput | IDropdown> = [
     placeholder: 'Введите названия СМИ',
     required: false,
   },
+  {
+    id: uuidv4(),
+    label: '3-10 изображений проекта, jpeg, высота < 1500 рх',
+    type: 'file',
+    placeholder: 'Добавить',
+    required: true,
+  },
+  {
+    id: uuidv4(),
+    label: 'Фотограф съёмки',
+    type: 'text',
+    placeholder: 'Укажите фотографа съёмки',
+    required: false,
+  },
 ];
 
 const Form = observer(() => {
@@ -114,7 +134,7 @@ const Form = observer(() => {
           {fields.map((field) => (
             <FormItem
               key={field.id}
-              id={field.id}
+              id={field.label + '-' + field.id}
               type={field.type}
               required={field.required}
               placeholder={field.placeholder}

@@ -4,6 +4,7 @@ import { HTMLProps } from 'react';
 import { ICommonFields, IInput, IDropdown } from '../../interfaces/form';
 import Dropdown from './Dropdown';
 import Input from './Input';
+import FileInput from './FileInput';
 
 const StyledFormItem = styled.div`
   display: grid;
@@ -78,6 +79,16 @@ const FormItem = observer(
         )}
         {(type === 'text' || type === 'number') && (
           <Input
+            type={type}
+            id={id}
+            name={children}
+            placeholder={placeholder}
+            required={required}
+            {...props}
+          />
+        )}
+        {type === 'file' && (
+          <FileInput
             type={type}
             id={id}
             name={children}

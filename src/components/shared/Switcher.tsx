@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import type { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 const StyledRoot = styled.fieldset`
   display: flex;
