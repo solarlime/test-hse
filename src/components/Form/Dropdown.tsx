@@ -36,7 +36,7 @@ const StyledDropdown = styled.select<{
   background-color: var(--black5);
   cursor: pointer;
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 600px) {
     font-size: 13px;
     line-height: 16px;
   }

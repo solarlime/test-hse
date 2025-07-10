@@ -14,7 +14,7 @@ const StyledCloseIcon = styled.button`
   border-radius: 3px;
   background-color: transparent;
 
-  @media screen and (min-width: 501px) {
+  @media screen and (min-width: 601px) {
     position: fixed;
     right: 64px;
     top: 64px;
