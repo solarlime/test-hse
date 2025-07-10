@@ -1,6 +1,68 @@
 import styled from 'styled-components';
+import { HTMLProps } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../../store/StoreProvider';
+import { TCommonFields, TInput } from '../../interfaces/form';
+import { isAlphanumeric, isNumeric } from 'validator';
 
-const Input = styled.input`
+const Input = observer(
+  ({
+    id,
+    type,
+    ...props
+  }: {
+    id: TCommonFields['id'];
+    type: TInput['type'];
+  } & HTMLProps<HTMLInputElement>) => {
+    const { formStore } = useStore();
+
+    return (
+      <input
+        onChange={(event) => {
+          if (formStore.getValidity(id)) formStore.setValidity(id, false);
+          formStore.setStringValue(id, event.target.value);
+        }}
+        onBlur={() => {
+          if (formStore.getStringValue(id)) {
+            formStore.setStringValue(id, formStore.getStringValue(id)!.trim());
+            switch (type) {
+              case 'number': {
+                if (
+                  isNumeric(formStore.getStringValue(id)!) &&
+                  1900 < +formStore.getStringValue(id)! &&
+                  +formStore.getStringValue(id)! <= new Date().getFullYear()
+                ) {
+                  formStore.setValidity(id, true);
+                } else {
+                  formStore.setValidity(id, false);
+                }
+                break;
+              }
+              case 'text':
+              default: {
+                if (
+                  isAlphanumeric(formStore.getStringValue(id)!, 'ru-RU', {
+                    ignore: ' .,-+№!%?&"—:–',
+                  })
+                ) {
+                  formStore.setValidity(id, true);
+                } else {
+                  formStore.setValidity(id, false);
+                }
+                break;
+              }
+            }
+          }
+        }}
+        type={type}
+        value={formStore.getStringValue(id) ?? ''}
+        {...props}
+      />
+    );
+  },
+);
+
+const StyledInput = styled(Input)`
   appearance: textfield;
   font-family: Inter, Helvetica, sans-serif;
   font-size: 15px;
@@ -27,4 +89,4 @@ const Input = styled.input`
   }
 `;
 
-export default Input;
+export default StyledInput;

@@ -1,11 +1,13 @@
 import styled, { css } from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { AppContext } from '../../AppContext';
 import CloseIcon from '../shared/CloseIcon';
 import FormItem from './FormItem';
-import { IInput, IDropdown } from '../../interfaces/form';
+import { TInput, TDropdown, TFileInput } from '../../interfaces/form';
+import Button from '../shared/Button';
+import { useStore } from '../../store/StoreProvider';
 
 const FormContainer = styled.div<{ $isCompact?: boolean }>`
   ${({ $isCompact }) =>
@@ -52,6 +54,7 @@ const StyledForm = styled.form`
   grid-area: form;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 16px;
 `;
 
@@ -68,7 +71,29 @@ const FormHeader = styled.h1`
   }
 `;
 
-const fields: Array<IInput | IDropdown> = [
+const FormFields = styled.fieldset`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
+`;
+
+const fields: Array<TInput | TDropdown | TFileInput> = [
+  {
+    id: uuidv4(),
+    label: 'Обложка',
+    type: 'file',
+    multiple: false,
+    placeholder:
+      'Выберите изображение с устройства (рекомендуемый размер: 1140x1600px)',
+    required: true,
+  },
   {
     id: uuidv4(),
     label: 'Номинация',
@@ -110,6 +135,9 @@ const fields: Array<IInput | IDropdown> = [
     id: uuidv4(),
     label: '3-10 изображений проекта, jpeg, высота < 1500 рх',
     type: 'file',
+    multiple: true,
+    minFiles: 3,
+    maxFiles: 10,
     placeholder: 'Добавить',
     required: true,
   },
@@ -124,6 +152,39 @@ const fields: Array<IInput | IDropdown> = [
 
 const Form = observer(() => {
   const { isCompact } = useContext(AppContext);
+  const { formStore } = useStore();
+
+  useEffect(() => {
+    fields.forEach((field) => {
+      const compoundId = field.label + '-' + field.id;
+
+      if (
+        !formStore.getStringValue(compoundId) &&
+        !formStore.getFileValue(compoundId)
+      )
+        formStore.createValue(
+          compoundId,
+          field.type === 'file'
+            ? {
+                required: field.required,
+                isFile: true,
+                range: field.multiple
+                  ? {
+                      minFiles: field.minFiles,
+                      maxFiles: field.maxFiles,
+                    }
+                  : undefined,
+                isValid: !field.required,
+              }
+            : {
+                required: field.required,
+                isFile: false,
+                range: undefined,
+                isValid: !field.required,
+              },
+        );
+    });
+  }, []);
 
   return (
     <FormContainer $isCompact={isCompact}>
@@ -131,18 +192,34 @@ const Form = observer(() => {
       <StyledFormWrapper>
         <StyledForm>
           <FormHeader>Анкета участника</FormHeader>
-          {fields.map((field) => (
-            <FormItem
-              key={field.id}
-              id={field.label + '-' + field.id}
-              type={field.type}
-              required={field.required}
-              placeholder={field.placeholder}
-              options={field.type === 'dropdown' ? field.options : undefined}
-            >
-              {field.label}
-            </FormItem>
-          ))}
+          <FormFields>
+            {fields.map((field) => {
+              const compoundId = field.label + '-' + field.id;
+              return (
+                <FormItem
+                  key={field.id}
+                  id={compoundId}
+                  type={field.type}
+                  required={field.required}
+                  placeholder={field.placeholder}
+                  options={
+                    field.type === 'dropdown' ? field.options : undefined
+                  }
+                  multiple={field.type === 'file' ? field.multiple : undefined}
+                >
+                  {field.label}
+                </FormItem>
+              );
+            })}
+          </FormFields>
+          <Button
+            $type="primary"
+            type="button"
+            disabled={!formStore.canSubmit}
+            onClick={() => alert(JSON.stringify(formStore.dataToSend))}
+          >
+            Отправить
+          </Button>
         </StyledForm>
       </StyledFormWrapper>
     </FormContainer>

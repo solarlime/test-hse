@@ -43,8 +43,9 @@ const Page = observer(() => {
               ниже, чтобы начать заполнение анкеты участника.
             </p>
             <Button
-              type="primary"
+              $type="primary"
               onClick={() => formStore.setIsFormOpened(true)}
+              type="button"
             >
               Открыть анкету
             </Button>

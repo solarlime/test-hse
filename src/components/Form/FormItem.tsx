@@ -1,7 +1,12 @@
 import styled, { css } from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import { HTMLProps } from 'react';
-import { ICommonFields, IInput, IDropdown } from '../../interfaces/form';
+import {
+  TCommonFields,
+  TInput,
+  TDropdown,
+  TFileInput,
+} from '../../interfaces/form';
 import Dropdown from './Dropdown';
 import Input from './Input';
 import FileInput from './FileInput';
@@ -49,15 +54,17 @@ const FormItem = observer(
     id,
     type,
     options,
+    multiple,
     placeholder,
     ...props
   }: {
     children: string;
-    required?: ICommonFields['required'];
-    id: ICommonFields['id'];
-    type: IInput['type'] | IDropdown['type'];
-    placeholder: ICommonFields['placeholder'];
-    options?: IDropdown['options'];
+    required?: TCommonFields['required'];
+    id: TCommonFields['id'];
+    type: TInput['type'] | TDropdown['type'] | TFileInput['type'];
+    multiple?: boolean;
+    placeholder: TCommonFields['placeholder'];
+    options?: TDropdown['options'];
   } & HTMLProps<HTMLInputElement> &
     HTMLProps<HTMLSelectElement>) => {
     return (
@@ -94,6 +101,7 @@ const FormItem = observer(
             name={children}
             placeholder={placeholder}
             required={required}
+            multiple={multiple}
             {...props}
           />
         )}

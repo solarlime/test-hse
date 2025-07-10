@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import { v4 as uuidv4 } from 'uuid';
 import { HTMLProps } from 'react';
-import { IDropdown } from '../../interfaces/form';
+import { TDropdown } from '../../interfaces/form';
 import { useStore } from '../../store/StoreProvider';
 import arrow from '../../assets/arrow.svg';
 
@@ -67,9 +67,9 @@ const Dropdown = observer(
     defaultValue,
     ...props
   }: {
-    id: IDropdown['id'];
-    children: IDropdown['options'];
-    defaultValue: IDropdown['placeholder'];
+    id: TDropdown['id'];
+    children: TDropdown['options'];
+    defaultValue: TDropdown['placeholder'];
   } & HTMLProps<HTMLSelectElement>) => {
     const { formStore } = useStore();
 
@@ -77,12 +77,23 @@ const Dropdown = observer(
       <StyledDropdownWrapper>
         <StyledDropdown
           id={id}
-          value={(formStore.getValue(id) as string | undefined) ?? defaultValue}
+          value={
+            formStore.getStringValue(id)?.length
+              ? formStore.getStringValue(id)
+              : defaultValue
+          }
           $value={
-            (formStore.getValue(id) as string | undefined) ?? defaultValue
+            formStore.getStringValue(id)?.length
+              ? formStore.getStringValue(id)
+              : defaultValue
           }
           $defaultValue={defaultValue}
-          onChange={(e) => formStore.setValue(id, e.target.value)}
+          onChange={(e) => {
+            formStore.setStringValue(id, e.target.value);
+            if (formStore.getValidity(id) === false) {
+              formStore.setValidity(id, true);
+            }
+          }}
           {...props}
         >
           <option value={defaultValue} disabled>

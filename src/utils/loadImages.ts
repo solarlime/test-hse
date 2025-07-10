@@ -11,7 +11,7 @@ function isImageResolutionValid(image: HTMLImageElement) {
   return image.height < 1500;
 }
 
-async function loadImages(files: FileList | null) {
+async function loadImages(files: FileList | null, validate: boolean = false) {
   if (files) {
     return Promise.allSettled(
       Array.from(files).map((file): Promise<IImage> => {
@@ -20,19 +20,24 @@ async function loadImages(files: FileList | null) {
           const url = URL.createObjectURL(file);
 
           const onLoad = function (this: HTMLImageElement) {
-            const isMimeTypeValid = isFileMimeTypeValid(file);
-            const isResolutionValid = isImageResolutionValid(this);
-            if (isResolutionValid && isMimeTypeValid) {
+            if (!validate) {
               img.removeEventListener('error', onError);
               resolve({ id: uuidv4(), file, src: url });
             } else {
-              img.removeEventListener('error', onError);
-              URL.revokeObjectURL(url);
-              reject(
-                isMimeTypeValid
-                  ? 'Неверный тип файла'
-                  : 'Слишком большое разрешение изображения',
-              );
+              const isMimeTypeValid = isFileMimeTypeValid(file);
+              const isResolutionValid = isImageResolutionValid(this);
+              if (isResolutionValid && isMimeTypeValid) {
+                img.removeEventListener('error', onError);
+                resolve({ id: uuidv4(), file, src: url });
+              } else {
+                img.removeEventListener('error', onError);
+                URL.revokeObjectURL(url);
+                reject(
+                  isResolutionValid
+                    ? 'Неверный тип файла'
+                    : 'Слишком большое разрешение изображения',
+                );
+              }
             }
           };
 

@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import { HTMLProps } from 'react';
-import { ICommonFields, IImage, IInput } from '../../interfaces/form';
+import { TCommonFields, TFileInput, IImage } from '../../interfaces/form';
 import { buttonStyle } from '../shared/Button';
 import Plus from '../../assets/plus.svg?react';
 import { loadImages } from '../../utils/loadImages';
 import { useStore } from '../../store/StoreProvider';
 import FloatingButton from '../shared/FloatingButton';
+import Delete from '../../assets/delete.svg?react';
 import CloseSmall from '../../assets/close-small.svg?react';
 
 const StyledFileInputContainer = styled.div`
@@ -36,18 +37,48 @@ const StyledLoadedImageContainer = styled.div`
 `;
 
 const StyledLoadedImage = styled.img`
-  width: auto;
-  height: 160px;
+  input[multiple] ~ div & {
+    width: auto;
+    height: 160px;
+  }
+
+  input:not([multiple]) ~ div & {
+    width: 300px;
+    height: 424px;
+    object-fit: cover;
+  }
 `;
 
 const StyledFileInputLabel = styled.label`
-  ${buttonStyle}
+  input[multiple] ~ & {
+    background-color: var(--white);
+    color: var(--black);
+    border-color: var(--black);
+    box-sizing: border-box;
+    cursor: pointer;
 
-  background-color: var(--white);
-  color: var(--black);
-  border-color: var(--black);
-  box-sizing: border-box;
-  cursor: pointer;
+    ${buttonStyle}
+  }
+
+  input:not([multiple]) ~ & {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    max-height: 424px;
+    aspect-ratio: 0.7075;
+    background-color: var(--black5);
+    color: var(--black47);
+    font-size: 13px;
+    line-height: 16px;
+    cursor: pointer;
+  }
+
+  input:not([multiple]) ~ div:has(div) ~ & {
+    display: none;
+  }
 `;
 
 const StyledFileInput = styled.input`
@@ -59,42 +90,25 @@ const FileInput = observer(
   ({
     id,
     type,
+    multiple = false,
     placeholder,
   }: {
-    id: ICommonFields['id'];
-    type: IInput['type'];
-    placeholder: ICommonFields['placeholder'];
+    id: TCommonFields['id'];
+    type: TFileInput['type'];
+    multiple?: boolean;
+    placeholder: TCommonFields['placeholder'];
   } & HTMLProps<HTMLInputElement>) => {
     const { formStore } = useStore();
 
     return (
       <StyledFileInputContainer>
-        <StyledLoadedImages>
-          {(formStore.getValue(id) as IImage[] | undefined)?.map((image) => (
-            <StyledLoadedImageContainer key={image.id}>
-              <FloatingButton
-                $positionX="right"
-                $positionY="top"
-                onClick={() => formStore.removeFile(id, image.id)}
-                type="button"
-              >
-                <CloseSmall />
-              </FloatingButton>
-              <StyledLoadedImage id={image.id} src={image.src} alt="" />
-            </StyledLoadedImageContainer>
-          ))}
-        </StyledLoadedImages>
-        <StyledFileInputLabel htmlFor={id}>
-          <Plus />
-          {placeholder}
-        </StyledFileInputLabel>
         <StyledFileInput
           id={id}
           type={type}
           accept="image/jpeg"
-          multiple
+          multiple={multiple}
           onChange={async (event) => {
-            const results = await loadImages(event.target.files);
+            const results = await loadImages(event.target.files, multiple);
             const fulfilled: IImage[] = [];
             const rejected = new Set<string>();
             results.forEach((promiseResult) => {
@@ -112,6 +126,40 @@ const FileInput = observer(
             }
           }}
         />
+        <StyledLoadedImages>
+          {formStore.getFileValue(id)?.map((image) => (
+            <StyledLoadedImageContainer key={image.id}>
+              {multiple ? (
+                <>
+                  <FloatingButton
+                    $positionX="right"
+                    $positionY="top"
+                    onClick={() => formStore.removeFile(id, image.id)}
+                    type="button"
+                  >
+                    <CloseSmall />
+                  </FloatingButton>
+                </>
+              ) : (
+                <>
+                  <FloatingButton
+                    $positionX="right"
+                    $positionY="top"
+                    onClick={() => formStore.removeFile(id, image.id)}
+                    type="button"
+                  >
+                    <Delete />
+                  </FloatingButton>
+                </>
+              )}
+              <StyledLoadedImage id={image.id} src={image.src} alt="" />
+            </StyledLoadedImageContainer>
+          ))}
+        </StyledLoadedImages>
+        <StyledFileInputLabel htmlFor={id}>
+          {multiple && <Plus />}
+          {placeholder}
+        </StyledFileInputLabel>
       </StyledFileInputContainer>
     );
   },

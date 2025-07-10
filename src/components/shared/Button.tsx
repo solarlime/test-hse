@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import { HTMLProps, ReactNode } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 
 export const buttonStyle = css`
   display: flex;
@@ -50,15 +50,15 @@ const StyledButton = styled.button<{ $type: 'primary' | 'secondary' }>`
 
 const Button = observer(
   ({
-    type,
+    $type,
     children,
     ...props
   }: {
-    type: 'primary' | 'secondary';
+    $type: 'primary' | 'secondary';
     children: string | ReactNode;
-  } & HTMLProps<HTMLButtonElement>) => {
+  } & ButtonHTMLAttributes<HTMLButtonElement>) => {
     return (
-      <StyledButton $type={type} {...props}>
+      <StyledButton $type={$type} {...props}>
         {children}
       </StyledButton>
     );
