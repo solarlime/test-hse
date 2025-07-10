@@ -59,6 +59,17 @@ class FormStore {
     return undefined;
   }
 
+  getRange(id: string) {
+    if (
+      id in this._values &&
+      Array.isArray(this._values[id].value) &&
+      this._values[id].range
+    ) {
+      return this._values[id].range;
+    }
+    return undefined;
+  }
+
   setStringValue(id: string, value: string) {
     if (id in this._values) {
       if (typeof this._values[id].value === 'string') {
@@ -79,7 +90,12 @@ class FormStore {
       ) {
         this.setValidity(id, true);
       } else {
-        this.setValidity(id, false);
+        if (record.value.length > record.range.maxFiles) {
+          record.value = record.value.slice(0, record.range.maxFiles);
+          this.setValidity(id, true);
+        } else {
+          this.setValidity(id, false);
+        }
       }
     } else {
       if (record.value.length === 0) {

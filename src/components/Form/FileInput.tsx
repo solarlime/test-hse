@@ -156,10 +156,16 @@ const FileInput = observer(
             </StyledLoadedImageContainer>
           ))}
         </StyledLoadedImages>
-        <StyledFileInputLabel htmlFor={id}>
-          {multiple && <Plus />}
-          {placeholder}
-        </StyledFileInputLabel>
+        {(!multiple ||
+          (formStore.getRange(id) &&
+            formStore.getFileValue(id) &&
+            formStore.getRange(id)!.maxFiles >
+              formStore.getFileValue(id)!.length)) && (
+          <StyledFileInputLabel htmlFor={id}>
+            {multiple && <Plus />}
+            {placeholder}
+          </StyledFileInputLabel>
+        )}
       </StyledFileInputContainer>
     );
   },
