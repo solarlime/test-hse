@@ -41,7 +41,7 @@ const StyledFormWrapper = styled.div`
   padding: 0 10px;
   margin: 0 auto;
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 600px) {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -55,7 +55,11 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
+  gap: 32px;
+
+  @media screen and (max-width: 600px) {
+    gap: 24px;
+  }
 `;
 
 const FormHeader = styled.h1`
@@ -65,89 +69,110 @@ const FormHeader = styled.h1`
   font-size: 60px;
   line-height: 70px;
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 600px) {
     font-size: 28px;
     line-height: 34px;
   }
 `;
 
-const FormFields = styled.fieldset`
+const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+`;
+
+const FormFields = styled.fieldset`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   padding: 0;
   margin: 0;
   border: 0;
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 600px) {
     width: 100%;
+    gap: 32px;
   }
 `;
 
-const fields: Array<TInput | TDropdown | TFileInput> = [
-  {
-    id: uuidv4(),
-    label: 'Обложка',
-    type: 'file',
-    multiple: false,
-    placeholder:
-      'Выберите изображение с устройства (рекомендуемый размер: 1140x1600px)',
-    required: true,
-  },
-  {
-    id: uuidv4(),
-    label: 'Номинация',
-    type: 'dropdown',
-    options: ['Номинация 1', 'Номинация 2', 'Номинация 3'],
-    placeholder: 'Выберите номинацию',
-    required: true,
-  },
-  {
-    id: uuidv4(),
-    label: 'Подноминация',
-    type: 'dropdown',
-    options: ['Подноминация 1', 'Подноминация 2', 'Подноминация 3'],
-    placeholder: 'Выберите подноминацию',
-    required: true,
-  },
-  {
-    id: uuidv4(),
-    label: 'Название проекта',
-    type: 'text',
-    placeholder: 'Введите название проекта',
-    required: true,
-  },
-  {
-    id: uuidv4(),
-    label: 'Год реализации проекта',
-    type: 'number',
-    placeholder: 'Введите год',
-    required: true,
-  },
-  {
-    id: uuidv4(),
-    label: 'В каких СМИ проект был опубликован?',
-    type: 'text',
-    placeholder: 'Введите названия СМИ',
-    required: false,
-  },
-  {
-    id: uuidv4(),
-    label: '3-10 изображений проекта, jpeg, высота < 1500 рх',
-    type: 'file',
-    multiple: true,
-    minFiles: 3,
-    maxFiles: 10,
-    placeholder: 'Добавить',
-    required: true,
-  },
-  {
-    id: uuidv4(),
-    label: 'Фотограф съёмки',
-    type: 'text',
-    placeholder: 'Укажите фотографа съёмки',
-    required: false,
-  },
+const StyledButtonWrapper = styled.div`
+  @media screen and (max-width: 600px) {
+    padding: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+`;
+
+const groups: Array<TInput | TDropdown | TFileInput>[] = [
+  [
+    {
+      id: uuidv4(),
+      label: 'Обложка',
+      type: 'file',
+      multiple: false,
+      placeholder:
+        'Выберите изображение с устройства (рекомендуемый размер: 1140x1600px)',
+      required: true,
+    },
+  ],
+  [
+    {
+      id: uuidv4(),
+      label: 'Номинация',
+      type: 'dropdown',
+      options: ['Номинация 1', 'Номинация 2', 'Номинация 3'],
+      placeholder: 'Выберите номинацию',
+      required: true,
+    },
+    {
+      id: uuidv4(),
+      label: 'Подноминация',
+      type: 'dropdown',
+      options: ['Подноминация 1', 'Подноминация 2', 'Подноминация 3'],
+      placeholder: 'Выберите подноминацию',
+      required: true,
+    },
+  ],
+  [
+    {
+      id: uuidv4(),
+      label: 'Название проекта',
+      type: 'text',
+      placeholder: 'Введите название проекта',
+      required: true,
+    },
+    {
+      id: uuidv4(),
+      label: 'Год реализации проекта',
+      type: 'number',
+      placeholder: 'Введите год',
+      required: true,
+    },
+    {
+      id: uuidv4(),
+      label: 'В каких СМИ проект был опубликован?',
+      type: 'text',
+      placeholder: 'Введите названия СМИ',
+      required: false,
+    },
+    {
+      id: uuidv4(),
+      label: '3-10 изображений проекта, jpeg, высота < 1500 рх',
+      type: 'file',
+      multiple: true,
+      minFiles: 3,
+      maxFiles: 10,
+      placeholder: 'Добавить',
+      required: true,
+    },
+    {
+      id: uuidv4(),
+      label: 'Фотограф съёмки',
+      type: 'text',
+      placeholder: 'Укажите фотографа съёмки',
+      required: false,
+    },
+  ],
 ];
 
 const Form = observer(() => {
@@ -155,7 +180,7 @@ const Form = observer(() => {
   const { formStore } = useStore();
 
   useEffect(() => {
-    fields.forEach((field) => {
+    groups.flat(1).forEach((field) => {
       const compoundId = field.label + '-' + field.id;
 
       if (
@@ -193,33 +218,43 @@ const Form = observer(() => {
         <StyledForm>
           <FormHeader>Анкета участника</FormHeader>
           <FormFields>
-            {fields.map((field) => {
-              const compoundId = field.label + '-' + field.id;
+            {groups.map((fields, index) => {
               return (
-                <FormItem
-                  key={field.id}
-                  id={compoundId}
-                  type={field.type}
-                  required={field.required}
-                  placeholder={field.placeholder}
-                  options={
-                    field.type === 'dropdown' ? field.options : undefined
-                  }
-                  multiple={field.type === 'file' ? field.multiple : undefined}
-                >
-                  {field.label}
-                </FormItem>
+                <FormGroup key={index}>
+                  {fields.map((field) => {
+                    const compoundId = field.label + '-' + field.id;
+                    return (
+                      <FormItem
+                        key={field.id}
+                        id={compoundId}
+                        type={field.type}
+                        required={field.required}
+                        placeholder={field.placeholder}
+                        options={
+                          field.type === 'dropdown' ? field.options : undefined
+                        }
+                        multiple={
+                          field.type === 'file' ? field.multiple : undefined
+                        }
+                      >
+                        {field.label}
+                      </FormItem>
+                    );
+                  })}
+                </FormGroup>
               );
             })}
           </FormFields>
-          <Button
-            $type="primary"
-            type="button"
-            disabled={!formStore.canSubmit}
-            onClick={() => alert(JSON.stringify(formStore.dataToSend))}
-          >
-            Отправить
-          </Button>
+          <StyledButtonWrapper>
+            <Button
+              $type="primary"
+              type="button"
+              disabled={!formStore.canSubmit}
+              onClick={() => alert(JSON.stringify(formStore.dataToSend))}
+            >
+              Отправить
+            </Button>
+          </StyledButtonWrapper>
         </StyledForm>
       </StyledFormWrapper>
     </FormContainer>

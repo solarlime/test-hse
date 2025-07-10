@@ -74,7 +74,7 @@ const StyledInput = styled(Input)`
   color: var(--black);
   background-color: var(--black5);
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 600px) {
     font-size: 13px;
     line-height: 16px;
   }

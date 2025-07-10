@@ -9,7 +9,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    const compactMatcher = window.matchMedia('(max-width: 500px)');
+    const compactMatcher = window.matchMedia('(max-width: 600px)');
     const handleChange = (event: MediaQueryListEvent) => {
       setIsCompact(event.matches);
     };

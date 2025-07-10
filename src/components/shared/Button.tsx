@@ -16,7 +16,7 @@ export const buttonStyle = css`
   font-size: 17px;
   line-height: 22px;
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 600px) {
     width: 100%;
     height: 36px;
     padding: 0 24px;

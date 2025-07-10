@@ -18,7 +18,7 @@ const StyledFormItem = styled.div`
   align-items: center;
   gap: 24px;
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 600px) {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -31,7 +31,7 @@ const StyledLabel = styled.label<{ $required?: boolean }>`
   font-size: 15px;
   line-height: 20px;
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 600px) {
     font-size: 13px;
     line-height: 16px;
   }

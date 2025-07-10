@@ -27,7 +27,7 @@ export default createGlobalStyle`
     line-height: 22px;
     letter-spacing: -0.02em;
     
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 600px) {
       font-size: 13px;
       line-height: 16px;
     }
